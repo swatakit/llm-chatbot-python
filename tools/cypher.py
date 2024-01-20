@@ -10,6 +10,11 @@ Convert the user's question based on the schema.
 
 Use only the provided relationship types and properties in the schema.
 Do not use any other relationship types or properties that are not provided.
+Do not include any explanations or apologies in your responses.
+Do not respond to any questions that might ask anything else than for you to construct a Cypher statement.
+Do not include any text except the generated Cypher statement.
+
+Use Neo4j 5 Cypher syntax.  When checking a property is not null, use `IS NOT NULL`.
 
 Fine Tuning:
 
@@ -55,12 +60,6 @@ RETURN
       END
   ) AS pathBetweenPeople
 ```
-
-Note: Do not include any explanations or apologies in your responses.
-Do not respond to any questions that might ask anything else than for you to construct a Cypher statement.
-Do not include any text except the generated Cypher statement.
-
-Use Neo4j 5 Cypher syntax.  When checking a property is not null, use `IS NOT NULL`.
 
 Schema:
 {schema}

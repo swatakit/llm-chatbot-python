@@ -7,13 +7,45 @@ from agent import generate_response
 st.set_page_config("Ebert", page_icon=":movie_camera:")
 # end::setup[]
 
-st.title("Welcome! to the GraphAcademy Movie Chatbot!")
+def stick_header():
+
+    # make header sticky.
+    st.markdown(
+        """
+            <div class='fixed-header'/>
+            <style>
+                div[data-testid="stVerticalBlock"] div:has(div.fixed-header) {
+                    position: sticky;
+                    top: 2.875rem;
+                    background-color: white;
+                    z-index: 999;
+                }
+                .fixed-header {
+                    /* border-bottom: 1px solid black; */
+                }
+            </style>
+        """,
+        unsafe_allow_html=True
+    )
+
+with st.container():
+    stick_header()
+
+    # Set the title
+    st.title("Welcome! to the GraphAcademy Movie Chatbot!")
+    # set explanation 
+    with st.expander("About Me"):
+        st.write("""
+        I am a movie expert! I know about movies, actors, and stuff! You can ask me anything, movie related, and I will try to answer it.
+        I can also recommend movies based on actors, directors, and genres. I can even tell you how two actors are connected through movies. Try me out!<br>
+        (but if I made mistakes, please forgive me, I am still learning! 😅)
+    """)
 
 # tag::session[]
 # Set up Session State
 if "messages" not in st.session_state:
     st.session_state.messages = [
-        {"role": "assistant", "content": "Hi, I'm the GraphAcademy Movie Chatbot!  Ask me anything about movies, actors, and plots 😉"},
+        {"role": "assistant", "content": "Hi, I'm the GraphAcademy Movie Chatbot!  Ask me anything about movies 😉"},
     ]
 # end::session[]
 
