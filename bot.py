@@ -7,11 +7,13 @@ from agent import generate_response
 st.set_page_config("Ebert", page_icon=":movie_camera:")
 # end::setup[]
 
+st.title("Welcome! to the GraphAcademy Movie Chatbot!")
+
 # tag::session[]
 # Set up Session State
 if "messages" not in st.session_state:
     st.session_state.messages = [
-        {"role": "assistant", "content": "Hi, I'm the GraphAcademy Chatbot!  How can I help you?"},
+        {"role": "assistant", "content": "Hi, I'm the GraphAcademy Movie Chatbot!  Ask me anything about movies, actors, and plots 😉"},
     ]
 # end::session[]
 

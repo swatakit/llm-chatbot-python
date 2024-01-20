@@ -2,6 +2,8 @@ from langchain.agents import AgentExecutor, create_react_agent
 from langchain import hub
 from langchain.tools import Tool
 from langchain.prompts import PromptTemplate
+from tools.vector import kg_qa
+from tools.cypher import cypher_qa
 
 # Include the LLM from a previous lesson
 from llm import llm
@@ -12,7 +14,19 @@ tools = [
         description="For general chat not covered by other tools",
         func=llm.invoke,
         return_direct=True
-    )
+    ),
+    Tool.from_function(
+        name="Vector Search Index",  # (1)
+        description="Provides information about movie plots using Vector Search", # (2)
+        func = kg_qa, # (3)
+        return_direct=True
+    ),
+    Tool.from_function(
+        name="Graph Cypher QA Chain",  # (1)
+        description="Provides information about Movies including their Actors, Directors and User reviews", # (2)
+        func = cypher_qa, # (3)
+        return_direct=True
+    ),
 ]
 
 from langchain.chains.conversation.memory import ConversationBufferWindowMemory
@@ -70,15 +84,43 @@ agent_executor = AgentExecutor(
     agent=agent,
     tools=tools,
     memory=memory,
-    verbose=True
+    verbose=True,
+    # handle_parsing_errors=True
     )
+
+####################################################################################################
+# These are from solutions/tools/vector.py and solutions/tools/cypher.py
+# Take only the last one from cypher.py because it work backwards
+####################################################################################################
+
+# def generate_response(prompt):
+#     """
+#     Create a handler that calls the Conversational agent
+#     and returns a response to be rendered in the UI
+#     """
+#     response = agent_executor.invoke({"input": prompt})
+#     return response['output']
+
+# def generate_response(prompt):
+#     """
+#     Use the Neo4j Vector Search Index
+#     to augment the response from the LLM
+#     """
+#     # Handle the response
+#     response = kg_qa({"query": prompt})
+#     return response['result']
 
 def generate_response(prompt):
     """
-    Create a handler that calls the Conversational agent
-    and returns a response to be rendered in the UI
+    Use the Neo4j recommendations dataset to provide
+    context to the LLM when answering a question
     """
 
-    response = agent_executor.invoke({"input": prompt})
-
-    return response['output']
+    try:
+        # Handle the response
+        response = cypher_qa.run(prompt)
+        return response
+    except Exception as e:
+        # Handle the exception
+        print(f"An error occurred: {str(e)}")
+        return "Sorry, I don't know the answer to that."
