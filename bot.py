@@ -37,7 +37,7 @@ with st.container():
     with st.expander("About Me"):
         st.write("""
         I am a movie expert! I know about movies, actors, and stuff! You can ask me anything, movie related, and I will try to answer it.
-        I can also recommend movies based on actors, directors, and genres. I can even tell you how two actors are connected through movies. Try me out!<br>
+        I can also recommend movies based on actors, directors, and genres. I can even tell you how two actors are connected through movies. Try me out!\n\n
         (but if I made mistakes, please forgive me, I am still learning! 😅)
     """)
 
