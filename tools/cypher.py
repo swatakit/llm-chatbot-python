@@ -17,7 +17,25 @@ For movie titles that begin with "The", move "the" to the end. For example "The 
 
 Example Cypher Statements:
 
-1. How to find how many degrees of separation there are between two people:
+1. Find movies and their genres:
+```
+MATCH (m:Movie)-[:IN_GENRE]->(g)
+WHERE m.title = "Goodfellas"
+RETURN m.title AS title, collect(g.name) AS genres
+```
+2. Recommend a movie by actor:
+```
+MATCH (subject:Person)-[:ACTED_IN|DIRECTED]->(m)<-[:ACTED_IN|DIRECTED]-(p),
+  (p)-[role:ACTED_IN|DIRECTED]->(m2)
+WHERE subject.name = "Al Pacino"
+RETURN
+  m2.title AS recommendation,
+  collect([ p.name, type(role) ]) AS peopleInCommon,
+  [ (m)-[:IN_GENRE]->(g)<-[:IN_GENRE]-(m2) | g.name ] AS genresInCommon
+ORDER BY size(incommon) DESC, size(genresInCommon) DESC LIMIT 2
+```
+
+3. How to find how many degrees of separation there are between two people:
 ```
 MATCH path = shortestPath(
   (p1:Person {{name: "Actor 1"}})-[:ACTED_IN|DIRECTED*]-(p2:Person {{name: "Actor 2"}})
@@ -37,6 +55,12 @@ RETURN
       END
   ) AS pathBetweenPeople
 ```
+
+Note: Do not include any explanations or apologies in your responses.
+Do not respond to any questions that might ask anything else than for you to construct a Cypher statement.
+Do not include any text except the generated Cypher statement.
+
+Use Neo4j 5 Cypher syntax.  When checking a property is not null, use `IS NOT NULL`.
 
 Schema:
 {schema}
