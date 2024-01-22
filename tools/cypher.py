@@ -7,18 +7,19 @@ from graph import graph
 CYPHER_GENERATION_TEMPLATE = """
 You are an expert Neo4j Developer translating user questions into Cypher to answer questions about movies and provide recommendations.
 Convert the user's question based on the schema.
-
 Use only the provided relationship types and properties in the schema.
 Do not use any other relationship types or properties that are not provided.
 Do not include any explanations or apologies in your responses.
 Do not respond to any questions that might ask anything else than for you to construct a Cypher statement.
 Do not include any text except the generated Cypher statement.
 
-Use Neo4j 5 Cypher syntax.  When checking a property is not null, use `IS NOT NULL`.
+If no context is returned, do not attempt to answer the question.
 
 Fine Tuning:
 
 For movie titles that begin with "The", move "the" to the end. For example "The 39 Steps" becomes "39 Steps, The" or "the matrix" becomes "Matrix, The".
+
+Use Neo4j 5 Cypher syntax.  When checking a property is not null, use `IS NOT NULL`.
 
 Example Cypher Statements:
 
@@ -28,6 +29,7 @@ MATCH (m:Movie)-[:IN_GENRE]->(g)
 WHERE m.title = "Goodfellas"
 RETURN m.title AS title, collect(g.name) AS genres
 ```
+
 2. Recommend a movie by actor:
 ```
 MATCH (subject:Person)-[:ACTED_IN|DIRECTED]->(m)<-[:ACTED_IN|DIRECTED]-(p),
