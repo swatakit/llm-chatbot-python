@@ -10,7 +10,7 @@ neo4jvector = Neo4jVector.from_existing_index(
     index_name="moviePlots",                 # (5)
     node_label="Movie",                      # (6)
     text_node_property="plot",               # (7)
-    embedding_node_property="plotEmbedding", # (8)
+    embedding_node_property="embedding",     # (8)
     retrieval_query="""
 RETURN
     node.plot AS text,
@@ -29,8 +29,15 @@ retriever = neo4jvector.as_retriever()
 
 from langchain.chains import RetrievalQA
 
-kg_qa = RetrievalQA.from_chain_type(
-    llm,                  # (1)
-    chain_type="stuff",   # (2)
-    retriever=retriever,  # (3)
+# kg_qa = RetrievalQA.from_chain_type(
+#     llm,                  # (1)
+#     chain_type="stuff",   # (2)
+#     retriever=retriever,  # (3)
+# )
+
+kg_qa = RetrievalQA.from_llm(
+    llm=llm,
+    retriever=retriever, 
+    verbose=True, 
+    return_source_documents=True
 )
