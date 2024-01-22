@@ -11,8 +11,13 @@ from llm import llm
 # For kq_qa
 def run_retriever(query):
     results = kg_qa.invoke({"query":query})
-    movies = '\n'.join([doc.metadata["title"] + " - " + doc.page_content for doc in results["source_documents"]])
-    return movies
+    return results['result']
+
+    # Don't need this any more, we did .from_chain_type, and mold the resuls with prompt
+    # This is the original code from the lesson Neo4j+LLM Fundamentals
+    # print(str(results["source_documents"]))
+    # movies = '\n\n'.join([doc.metadata["title"] + " - " + doc.page_content + ", metadata:" + str(doc.metadata) for doc in results["source_documents"]])
+    # return movies
 
 # For cypher_qa
 def run_cypher(query):

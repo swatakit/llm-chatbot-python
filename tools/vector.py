@@ -1,6 +1,30 @@
 import streamlit as st
 from langchain_community.vectorstores.neo4j_vector import Neo4jVector
 from llm import llm, embeddings
+from langchain.prompts import PromptTemplate
+
+VECTOR_SEARCH_TEMPLATE="""
+You are a movie expert. You find movies from user's given plot.
+
+Use the following context to summarise movies to provide recommendation to the user. 
+
+CONTEXT:
+------
+{context}
+
+RULES:
+------
+If no context is returned, do not attempt to answer the question.
+If there are more than one movies, separate them into bullet points 
+For each movie, include the title, genre, plot, year, runtime, released, budget.
+
+Question: {question}
+Answer: 
+
+"""
+prompt = PromptTemplate(
+    template=VECTOR_SEARCH_TEMPLATE, input_variables=["context","question"]
+)
 
 neo4jvector = Neo4jVector.from_existing_index(
     embeddings,                              # (1)
@@ -35,9 +59,17 @@ from langchain.chains import RetrievalQA
 #     retriever=retriever,  # (3)
 # )
 
-kg_qa = RetrievalQA.from_llm(
-    llm=llm,
-    retriever=retriever, 
-    verbose=True, 
-    return_source_documents=True
+# kg_qa = RetrievalQA.from_llm(
+#     llm=llm,
+#     retriever=retriever, 
+#     verbose=True, 
+#     return_source_documents=True
+# )
+
+kg_qa = RetrievalQA.from_chain_type(
+    llm,                  # (1)
+    chain_type="stuff",   # (2)
+    retriever=retriever,  # (3)
+    verbose=True,
+    chain_type_kwargs={"prompt": prompt, 'verbose': True}
 )
