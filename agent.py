@@ -8,6 +8,17 @@ from tools.cypher import cypher_qa
 # Include the LLM from a previous lesson
 from llm import llm
 
+# For kq_qa
+def run_retriever(query):
+    results = kg_qa.invoke({"query":query})
+    movies = '\n'.join([doc.metadata["title"] + " - " + doc.page_content for doc in results["source_documents"]])
+    return movies
+
+# For cypher_qa
+def run_cypher(query):
+    results = cypher_qa.invoke(query)
+    return results['result']
+
 tools = [
     Tool.from_function(
         name="General Chat",
@@ -18,33 +29,30 @@ tools = [
     Tool.from_function(
         name="Vector Search Index",  # (1)
         description="Provides information about movie plots using Vector Search", # (2)
-        func = kg_qa, # (3)
+        func = run_retriever, # (3)
         return_direct=True
     ),
     Tool.from_function(
         name="Graph Cypher QA Chain",  # (1)
         description="Provides information about Movies including their Actors, Directors and User reviews", # (2)
-        func = cypher_qa, # (3)
+        func = run_cypher, # (3)
         return_direct=True
     ),
 ]
 
-from langchain.chains.conversation.memory import ConversationBufferWindowMemory
-memory = ConversationBufferWindowMemory(
+from langchain.chains.conversation.memory import ConversationBufferMemory
+memory = ConversationBufferMemory(
     memory_key='chat_history',
     k=5,
     return_messages=True,
 )
 
 
-
 # agent_prompt = hub.pull("hwchase17/react-chat")
-
 agent_prompt = PromptTemplate.from_template("""
 You are a movie expert providing information about movies.
 Be as helpful as possible and return as much information as possible.
 Do not answer any questions that do not relate to movies, actors or directors.
-
 Do not answer any questions using your pre-trained knowledge, only use the information provided in the context.
 
 TOOLS:
@@ -93,34 +101,16 @@ agent_executor = AgentExecutor(
 # Take only the last one from cypher.py because it work backwards
 ####################################################################################################
 
-# def generate_response(prompt):
-#     """
-#     Create a handler that calls the Conversational agent
-#     and returns a response to be rendered in the UI
-#     """
-#     response = agent_executor.invoke({"input": prompt})
-#     return response['output']
-
-# def generate_response(prompt):
-#     """
-#     Use the Neo4j Vector Search Index
-#     to augment the response from the LLM
-#     """
-#     # Handle the response
-#     response = kg_qa({"query": prompt})
-#     return response['result']
-
 def generate_response(prompt):
     """
-    Use the Neo4j recommendations dataset to provide
-    context to the LLM when answering a question
+    Create a handler that calls from agents
+    and returns a response to be rendered in the UI
     """
-
     try:
         # Handle the response
-        response = cypher_qa.run(prompt)
-        return response
+        response = agent_executor.invoke({"input": prompt})
+        return response['output']
     except Exception as e:
         # Handle the exception
         print(f"An error occurred: {str(e)}")
-        return "Sorry, I don't know the answer to that."
+        return "Sorry, I could not find answers from my context"
