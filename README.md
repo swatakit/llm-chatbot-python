@@ -6,6 +6,17 @@ This is a repository for a Movie Chatbot backed by neo4j graph database
 
 For a complete walkthrough of this repository, [enrol now](https://graphacademy.neo4j.com/courses/llm-chatbot-python/?ref=github)
 
+If you are completely new to `LangChain` and `Neo4j`, you may also find recommend  learnings here.
+
+| LangChain | Neo4j |
+|-----------|-------|
+| [LangChain for LLM Application Development - DeepLearning.AI](https://www.deeplearning.ai/short-courses/langchain-for-llm-application-development/) | [Neo4j Fundamentals](https://graphacademy.neo4j.com/courses/neo4j-fundamentals/) |
+| [LangChain: Chat with Your Data - DeepLearning.AI](https://www.deeplearning.ai/short-courses/langchain-chat-with-your-data/) | [Cypher Fundamentals](https://graphacademy.neo4j.com/courses/cypher-fundamentals/) |
+| | [Graph Data Modeling Fundamentals](https://graphacademy.neo4j.com/courses/modeling-fundamentals/) |
+| | [Importing CSV data into Neo4j](https://graphacademy.neo4j.com/courses/importing-cypher/) |
+
+
+
 ## Installation
 
 To run the application, you must install the libraries listed in `requirements.txt`.
@@ -20,7 +31,7 @@ Then run the `streamlit run` command to start the app on [http://localhost:8501/
 streamlit run bot.py
 ```
 
-## To setup Neo4j Sanbox account
+## To setup Neo4j Sandbox account
 Follow instruction on [neo4j sandbox](https://neo4j.com/sandbox/)
 
 ## Database Schema
