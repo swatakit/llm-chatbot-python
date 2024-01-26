@@ -5,19 +5,12 @@ from langchain.prompts import PromptTemplate
 from tools.vector import kg_qa
 from tools.cypher import cypher_qa
 
-# Include the LLM from a previous lesson
 from llm import llm
 
 # For kq_qa
 def run_retriever(query):
     results = kg_qa.invoke({"query":query})
     return results['result']
-
-    # Don't need this any more, we did .from_chain_type, and mold the resuls with prompt
-    # This is the original code from the lesson Neo4j+LLM Fundamentals
-    # print(str(results["source_documents"]))
-    # movies = '\n\n'.join([doc.metadata["title"] + " - " + doc.page_content + ", metadata:" + str(doc.metadata) for doc in results["source_documents"]])
-    # return movies
 
 # For cypher_qa
 def run_cypher(query):
@@ -100,11 +93,6 @@ agent_executor = AgentExecutor(
     verbose=True,
     # handle_parsing_errors=True
     )
-
-####################################################################################################
-# These are from solutions/tools/vector.py and solutions/tools/cypher.py
-# Take only the last one from cypher.py because it work backwards
-####################################################################################################
 
 def generate_response(prompt):
     """
