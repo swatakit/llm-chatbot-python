@@ -6,7 +6,7 @@ This is a repository for a Movie Chatbot backed by neo4j graph database
 
 For a complete walkthrough of this repository, [enrol now](https://graphacademy.neo4j.com/courses/llm-chatbot-python/?ref=github)
 
-If you are entirely new to `LangChain` and `Neo4j`, I recommend exploring the learning resources provided here.
+If you are entirely new to `OpenAI`, `LangChain`, and `Neo4j`, I recommend exploring the learning resources here.
 
 |OpenAI| LangChain | Neo4j |
 |------|-----------|-------|
